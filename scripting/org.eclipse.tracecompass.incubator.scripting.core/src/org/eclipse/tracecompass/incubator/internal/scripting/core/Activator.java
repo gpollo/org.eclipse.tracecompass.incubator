@@ -13,6 +13,7 @@ package org.eclipse.tracecompass.incubator.internal.scripting.core;
 
 import org.eclipse.tracecompass.common.core.TraceCompassActivator;
 import org.eclipse.tracecompass.incubator.internal.scripting.core.data.provider.ScriptingDataProviderManager;
+import org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker.TraceMarkerEventSourceFactory;
 
 /**
  * Activator
@@ -40,14 +41,14 @@ public class Activator extends TraceCompassActivator {
 
     @Override
     protected void startActions() {
-        /* Initialize the data provider manager */
         ScriptingDataProviderManager.getInstance();
+        TraceMarkerEventSourceFactory.getInstance().register();
     }
 
     @Override
     protected void stopActions() {
-        /* Dispose the data provider manager */
         ScriptingDataProviderManager.dispose();
+        TraceMarkerEventSourceFactory.getInstance().unregister();
     }
 
 }

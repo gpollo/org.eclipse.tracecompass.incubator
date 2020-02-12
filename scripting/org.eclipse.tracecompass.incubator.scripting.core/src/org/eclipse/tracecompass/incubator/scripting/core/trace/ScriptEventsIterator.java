@@ -63,6 +63,7 @@ public class ScriptEventsIterator implements Iterator<ITmfEvent> {
         while (event != ScriptEventRequest.END_EVENT && !fNames.contains(event.getName())) {
             event = fEventsQueue.take();
         }
+
         return event;
     }
 

@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.tracecompass.incubator.tracemarker.core.analysis;
+package org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker;
 
 import java.util.ArrayList;
 import java.util.List;

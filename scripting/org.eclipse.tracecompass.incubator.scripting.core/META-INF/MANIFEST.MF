@@ -24,7 +24,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.tracecompass.incubator.analysis.core;resolution:=optional,
  org.eclipse.tracecompass.incubator.callstack.core;resolution:=optional,
  org.eclipse.tracecompass.analysis.timing.core;resolution:=optional,
- org.eclipse.tracecompass.incubator.tracemarker.core;bundle-version="0.0.1",
  org.eclipse.tracecompass.tmf.ui;bundle-version="5.2.0"
 Export-Package: org.eclipse.tracecompass.incubator.internal.scripting.core;x-friends:="org.eclipse.tracecompass.incubator.scripting.core.tests,org.eclipse.tracecompass.incubator.scripting.ui.tests",
  org.eclipse.tracecompass.incubator.internal.scripting.core.analysis;x-friends:="org.eclipse.tracecompass.incubator.scripting.core.tests,org.eclipse.tracecompass.incubator.scripting.ui",

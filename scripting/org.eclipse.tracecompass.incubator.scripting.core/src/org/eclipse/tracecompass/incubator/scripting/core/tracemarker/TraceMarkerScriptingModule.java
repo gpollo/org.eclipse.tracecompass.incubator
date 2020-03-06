@@ -61,7 +61,7 @@ public class TraceMarkerScriptingModule {
     @WrapToScript
     public void addSimpleMarker(String name, long startTime, long endTime, @Nullable String color) {
         if (fSourceStatus == 0) {
-            initializeTraceMarkerGeneratorModule();
+            initializeScriptingMarkerSource();
         }
         if (createTraceMarker(name, null, startTime, endTime, color)) {
             fSource.configureSet(fTraceMarkerSet);
@@ -81,7 +81,7 @@ public class TraceMarkerScriptingModule {
     @WrapToScript
     public void addCategoryMarker(String name, String category, long startTime, long endTime, @Nullable String color) {
         if (fSourceStatus == 0) {
-            initializeTraceMarkerGeneratorModule();
+            initializeScriptingMarkerSource();
         }
         if (createTraceMarker(name, category, startTime, endTime, color)) {
             fSource.configureSet(fTraceMarkerSet);
@@ -116,7 +116,7 @@ public class TraceMarkerScriptingModule {
     /**
      * Initialize trace marker generator module.
      */
-    private void initializeTraceMarkerGeneratorModule() {
+    private void initializeScriptingMarkerSource() {
         fTrace = TmfTraceManager.getInstance().getActiveTrace();
         if (fTrace == null) {
             // No trace opened, can't add marker

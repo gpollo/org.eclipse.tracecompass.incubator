@@ -26,11 +26,11 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.IMarkerEventSourc
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.MarkerEvent;
 
 /**
- * The Class TraceMarkerGeneratorModule.
+ * The Class ScriptingMarkerSource.
  *
  * @author Maxime Thibault
  */
-public class TraceMarkerGeneratorModule implements IMarkerEventSource, IDisposableAdapter {
+public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAdapter {
 
     /** The Constant MS. */
     private static final String MS = "ms"; //$NON-NLS-1$
@@ -65,7 +65,7 @@ public class TraceMarkerGeneratorModule implements IMarkerEventSource, IDisposab
      *
      * @param trace the trace
      */
-    public TraceMarkerGeneratorModule(ITmfTrace trace) {
+    public ScriptingMarkerSource(ITmfTrace trace) {
         fTrace = trace;
         fTraceMarkerEvents = new ArrayList<>();
         fCategories = new ArrayList<>();

@@ -11,7 +11,7 @@ package org.eclipse.tracecompass.incubator.scripting.core.tracemarker;
 import org.eclipse.ease.modules.WrapToScript;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker.TraceMarker;
-import org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker.TraceMarkerGeneratorModule;
+import org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker.ScriptingMarkerSource;
 import org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker.TraceMarkerSet;
 import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
 import org.eclipse.tracecompass.tmf.core.trace.TmfTraceAdapterManager;
@@ -41,7 +41,7 @@ public class TraceMarkerScriptingModule {
     private ITmfTrace fTrace;
 
     /** The source. */
-    private TraceMarkerGeneratorModule fSource;
+    private ScriptingMarkerSource fSource;
 
     /** The trace marker set. */
     private TraceMarkerSet fTraceMarkerSet;
@@ -123,9 +123,9 @@ public class TraceMarkerScriptingModule {
             return;
         }
         for (IMarkerEventSource source : TmfTraceAdapterManager.getAdapters(fTrace, IMarkerEventSource.class)) {
-            if (source.getClass() == TraceMarkerGeneratorModule.class) {
+            if (source.getClass() == ScriptingMarkerSource.class) {
                 fTraceMarkerSet = new TraceMarkerSet(DEFAULT_NAME, DEFAULT_ID);
-                fSource = (TraceMarkerGeneratorModule) source;
+                fSource = (ScriptingMarkerSource) source;
                 fSourceStatus = 1;
                 return;
             }

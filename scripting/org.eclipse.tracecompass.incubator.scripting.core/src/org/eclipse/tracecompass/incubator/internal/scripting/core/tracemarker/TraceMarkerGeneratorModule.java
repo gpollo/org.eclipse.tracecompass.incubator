@@ -28,7 +28,7 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.MarkerEvent;
 /**
  * The Class TraceMarkerGeneratorModule.
  *
- * @author mathir
+ * @author Maxime Thibault
  */
 public class TraceMarkerGeneratorModule implements IMarkerEventSource, IDisposableAdapter {
 
@@ -95,7 +95,7 @@ public class TraceMarkerGeneratorModule implements IMarkerEventSource, IDisposab
      * @param traceMarker the trace marker
      */
     private void configureMarker(TraceMarker traceMarker) {
-        RGBA color = traceMarker.getColorRGBA();
+        RGBA color = traceMarker.getRGBAColor();
         String category = traceMarker.getCategory();
         if(!fCategories.contains(category)) {
             fCategories.add(category);

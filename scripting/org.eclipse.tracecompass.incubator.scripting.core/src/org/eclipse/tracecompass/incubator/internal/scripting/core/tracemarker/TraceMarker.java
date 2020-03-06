@@ -8,16 +8,16 @@
  *******************************************************************************/
 package org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker;
 
-import java.awt.Color;
-import java.lang.reflect.Field;
-
+import org.eclipse.tracecompass.tmf.core.dataprovider.X11ColorUtils;
+import org.eclipse.tracecompass.tmf.core.presentation.RGBAColor;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.swt.graphics.RGBA;
 
 /**
  * The Class TraceMarker.
  *
- * @author mathir
+ * @author Maxime Thibault
+ * @author Ibrahima Sega Sangare
  */
 public class TraceMarker {
 
@@ -27,11 +27,8 @@ public class TraceMarker {
     /** The Constant DEFAULT_UNIT. */
     public static final String DEFAULT_UNIT = "ns"; //$NON-NLS-1$
 
-    /** The Constant COLOR_PACKAGE. */
-    public static final String COLOR_PACKAGE = "java.awt.Color"; //$NON-NLS-1$
-
-    /** The Constant ALPHA. */
-    private static final int ALPHA = 70;
+    /** The hexadecimal base */
+    private static final int HEX = 16;
 
     /** The label. */
     private final String fLabel;
@@ -39,11 +36,8 @@ public class TraceMarker {
     /** The category. */
     private String fCategory;
 
-    /** The color. */
-    private Color fColor;
-
     /** The color RGBA. */
-    private RGBA fColorRGBA;
+    private RGBA fRGBAColor;
 
     /** The start time. */
     private final long fStartTime;
@@ -70,7 +64,7 @@ public class TraceMarker {
     public TraceMarker(String label, @Nullable String category, long startTime, long endTime, @Nullable String color) {
         fLabel = label;
         setCategory(category);
-        setColor(color);
+        setRGBAColor(color);
         fStartTime = startTime;
         fEndTime = endTime;
         fDuration = (fEndTime - fStartTime);
@@ -112,54 +106,32 @@ public class TraceMarker {
         }
     }
 
-
     /**
-     * Gets the color.
+     * Gets the RGBA Color.
      *
-     * @return the color
+     * @return the RGBA color
      */
-    public Color getColor() {
-        return fColor;
+    public RGBA getRGBAColor() {
+        return fRGBAColor;
     }
 
-
     /**
-     * Gets the color RGBA.
+     * Sets the RGBAColor.
      *
-     * @return the colorRGBA
+     * @param color The color to set
      */
-    public RGBA getColorRGBA() {
-        return fColorRGBA;
-    }
-
-
-    /**
-     * Sets the color.
-     *
-     * @param color the color to set
-     */
-    public void setColor(String color) {
-        try {
-            Field field = Class.forName(COLOR_PACKAGE).getField(color);
-            fColor = (Color)field.get(null);
-
-        } catch(Exception e) {
-            fColor = Color.RED;
+    private void setRGBAColor(String color) {
+        String hexColor = X11ColorUtils.toHexColor(color);
+        int intColor = 0;
+        if (hexColor != null) {
+            intColor = Integer.parseInt(hexColor, HEX);
         }
-        setColorRGBA(fColor);
+        RGBAColor rgbaColor = new RGBAColor(intColor);
+        fRGBAColor = new RGBA(rgbaColor.getRed(),
+                              rgbaColor.getBlue(),
+                              rgbaColor.getGreen(),
+                              rgbaColor.getAlpha());
     }
-
-
-    /**
-     * Sets the color RGBA.
-     */
-    private void setColorRGBA(Color color) {
-        fColorRGBA = new RGBA(color.getRed(),
-                              color.getBlue(),
-                              color.getGreen(),
-                              ALPHA);
-    }
-
 
     /**
      * Gets the start time.

@@ -21,7 +21,7 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.IMarkerEventSourc
 /**
  * The Class TraceMarkerScriptingModule.
  *
- * @author mathir
+ * @author Maxime Thibault
  */
 public class TraceMarkerScriptingModule {
 

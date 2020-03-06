@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * The Class TraceMarkerSet.
  *
- * @author mathir
+ * @author Maxime Thibault
  */
 public class TraceMarkerSet {
 

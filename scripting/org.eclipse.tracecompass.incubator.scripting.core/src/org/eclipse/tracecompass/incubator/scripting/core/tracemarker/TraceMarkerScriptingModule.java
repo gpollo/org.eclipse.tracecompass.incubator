@@ -79,7 +79,7 @@ public class TraceMarkerScriptingModule {
      * @param color the color
      */
     @WrapToScript
-    public void addCategoryMarker(String name, String category, long startTime, long endTime, @Nullable String color) {
+    public void addMarkerCategory(String name, String category, long startTime, long endTime, @Nullable String color) {
         if (fSourceStatus == 0) {
             initializeScriptingMarkerSource();
         }

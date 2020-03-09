@@ -83,7 +83,6 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
         String label = traceMarker.getLabel();
         long start = traceMarker.getStartTime();
         long duration = traceMarker.getDuration();
-        // TODO: problem when using other unit than nanos : *10 required
         MarkerEvent traceMarkerEvent = new MarkerEvent(null, start, duration, category, color, label, true);
         fTraceMarkerEvents.add(traceMarkerEvent);
 
@@ -125,6 +124,16 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
     @Override
     public void dispose() {
         TmfSignalManager.deregister(this);
+    }
+
+
+    /**
+     * Get the trace linked to this adapter
+     *
+     * @return the trace
+     */
+    public ITmfTrace getTrace() {
+        return fTrace;
     }
 
 }

@@ -28,6 +28,9 @@ public class TraceMarker {
     public static final String DEFAULT_COLOR = "FF0000"; //$NON-NLS-1$
 
     /** The hexadecimal base */
+    private static final int ALPHA = 70;
+
+    /** The hexadecimal base */
     private static final int HEX = 16;
 
     /** The label. */
@@ -118,18 +121,20 @@ public class TraceMarker {
      */
     private void setRGBAColor(String color) {
         String hexColor;
-        if(color == null) {
-            hexColor = DEFAULT_COLOR;
-        } else {
+
+        if(color != null && X11ColorUtils.toHexColor(color) != null) {
             hexColor = X11ColorUtils.toHexColor(color);
+            hexColor = hexColor.substring(1);
+        } else {
+            hexColor = DEFAULT_COLOR;
         }
-        hexColor = hexColor.substring(1);
+
         int intColor = Integer.parseInt(hexColor, HEX);
         RGBAColor rgbaColor = new RGBAColor(intColor);
         fRGBAColor = new RGBA(rgbaColor.getRed(),
                               rgbaColor.getBlue(),
                               rgbaColor.getGreen(),
-                              70);
+                              ALPHA);
     }
 
     /**

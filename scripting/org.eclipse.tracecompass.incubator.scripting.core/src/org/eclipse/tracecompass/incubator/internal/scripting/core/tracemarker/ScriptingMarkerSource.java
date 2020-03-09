@@ -13,13 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.graphics.RGBA;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.tracecompass.tmf.core.signal.TmfMarkerEventSourceUpdatedSignal;
 import org.eclipse.tracecompass.tmf.core.signal.TmfSignalManager;
 import org.eclipse.tracecompass.tmf.core.trace.AbstractTmfTraceAdapterFactory.IDisposableAdapter;
-import org.eclipse.tracecompass.tmf.core.trace.ICyclesConverter;
 import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.IMarkerEvent;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.IMarkerEventSource;
@@ -31,24 +29,6 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.MarkerEvent;
  * @author Maxime Thibault
  */
 public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAdapter {
-
-    /** The Constant MS. */
-    private static final String MS = "ms"; //$NON-NLS-1$
-
-    /** The Constant US. */
-    private static final String US = "us"; //$NON-NLS-1$
-
-    /** The Constant NS. */
-    private static final String NS = "ns"; //$NON-NLS-1$
-
-    /** The Constant CYCLES. */
-    private static final String CYCLES = "cycles"; //$NON-NLS-1$
-
-    /** The Constant NANO_PER_MILLI. */
-    private static final long NANO_PER_MILLI = 1000000L;
-
-    /** The Constant NANO_PER_MICRO. */
-    private static final long NANO_PER_MICRO = 1000L;
 
     /** The trace marker events. */
     private List<IMarkerEvent> fTraceMarkerEvents;
@@ -101,39 +81,14 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
             fCategories.add(category);
         }
         String label = traceMarker.getLabel();
-        long start = convertToNanos(traceMarker.getStartTime(), traceMarker.getUnit());
-        long duration = convertToNanos(traceMarker.getDuration(), traceMarker.getUnit());
+        long start = traceMarker.getStartTime();
+        long duration = traceMarker.getDuration();
         // TODO: problem when using other unit than nanos : *10 required
         MarkerEvent traceMarkerEvent = new MarkerEvent(null, start, duration, category, color, label, true);
         fTraceMarkerEvents.add(traceMarkerEvent);
 
         TmfMarkerEventSourceUpdatedSignal signal = new TmfMarkerEventSourceUpdatedSignal(this);
         TmfSignalManager.dispatchSignal(signal);
-    }
-
-
-    /**
-     * Convert to nanos.
-     *
-     * @param number the number
-     * @param unit the unit
-     * @return the long
-     */
-    private long convertToNanos(long number, String unit) {
-        if (unit.equalsIgnoreCase(MS)) {
-            return number * NANO_PER_MILLI;
-        } else if (unit.equalsIgnoreCase(US)) {
-            return number * NANO_PER_MICRO;
-        } else if (unit.equalsIgnoreCase(NS)) {
-            return number;
-        } else if (unit.equalsIgnoreCase(CYCLES) &&
-                fTrace instanceof IAdaptable) {
-            ICyclesConverter adapter = ((IAdaptable) fTrace).getAdapter(ICyclesConverter.class);
-            if (adapter != null) {
-                return adapter.cyclesToNanos(number);
-            }
-        }
-        return number;
     }
 
 

@@ -25,7 +25,7 @@ public class TraceMarker {
     public static final String DEFAULT_CATEGORY = "Default"; //$NON-NLS-1$
 
     /** The Constant DEFAULT_UNIT. */
-    public static final String DEFAULT_UNIT = "ns"; //$NON-NLS-1$
+    public static final String DEFAULT_COLOR = "FF0000"; //$NON-NLS-1$
 
     /** The hexadecimal base */
     private static final int HEX = 16;
@@ -48,9 +48,6 @@ public class TraceMarker {
     /** The end time. */
     private final long fEndTime;
 
-    /** The unit. */
-    private final String fUnit;
-
 
     /**
      * Instantiates a new trace marker.
@@ -68,7 +65,6 @@ public class TraceMarker {
         fStartTime = startTime;
         fEndTime = endTime;
         fDuration = (fEndTime - fStartTime);
-        fUnit = DEFAULT_UNIT;
     }
 
 
@@ -121,16 +117,19 @@ public class TraceMarker {
      * @param color The color to set
      */
     private void setRGBAColor(String color) {
-        String hexColor = X11ColorUtils.toHexColor(color);
-        int intColor = 0;
-        if (hexColor != null) {
-            intColor = Integer.parseInt(hexColor, HEX);
+        String hexColor;
+        if(color == null) {
+            hexColor = DEFAULT_COLOR;
+        } else {
+            hexColor = X11ColorUtils.toHexColor(color);
         }
+        hexColor = hexColor.substring(1);
+        int intColor = Integer.parseInt(hexColor, HEX);
         RGBAColor rgbaColor = new RGBAColor(intColor);
         fRGBAColor = new RGBA(rgbaColor.getRed(),
                               rgbaColor.getBlue(),
                               rgbaColor.getGreen(),
-                              rgbaColor.getAlpha());
+                              70);
     }
 
     /**
@@ -162,13 +161,4 @@ public class TraceMarker {
         return fEndTime;
     }
 
-
-    /**
-     * Gets the unit.
-     *
-     * @return the unit
-     */
-    public String getUnit() {
-        return fUnit;
-    }
 }

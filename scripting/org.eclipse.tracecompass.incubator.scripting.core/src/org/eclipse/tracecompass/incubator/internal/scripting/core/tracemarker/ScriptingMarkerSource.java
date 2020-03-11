@@ -30,20 +30,20 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.MarkerEvent;
  */
 public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAdapter {
 
-    /** The trace marker events. */
+    /** The trace marker events list. */
     private List<IMarkerEvent> fTraceMarkerEvents;
 
-    /** The categories. */
+    /** The categories list. */
     private List<String> fCategories;
 
-    /** The trace. */
+    /** The active trace. */
     private final ITmfTrace fTrace;
 
 
     /**
-     * Instantiates a new trace marker generator module.
+     * Instantiate and register a new trace marker source (adapter) to a trace.
      *
-     * @param trace the trace
+     * @param trace the active trace
      */
     public ScriptingMarkerSource(ITmfTrace trace) {
         fTrace = trace;
@@ -54,27 +54,21 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
 
 
     /**
-     * Configure set.
+     * Initialize the market events and categories list for a new script run.
      *
-     * @param traceMarkerSet the trace marker set
      */
-    public void configureSet(TraceMarkerSet traceMarkerSet) {
+    public void initializeAdapterMarkersLists() {
         fTraceMarkerEvents.clear();
         fCategories.clear();
-        if (traceMarkerSet != null) {
-            for (TraceMarker traceMarker : traceMarkerSet.getMarkers()) {
-                configureMarker(traceMarker);
-            }
-        }
     }
 
 
     /**
-     * Configure marker.
+     * Convert trace marker object into a marker event and signal the time graph view.
      *
-     * @param traceMarker the trace marker
+     * @param traceMarker : the marker object to convert
      */
-    private void configureMarker(TraceMarker traceMarker) {
+    public void configureMarker(TraceMarker traceMarker) {
         RGBA color = traceMarker.getRGBAColor();
         String category = traceMarker.getCategory();
         if(!fCategories.contains(category)) {
@@ -92,10 +86,11 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
 
 
     /**
-     * Gets the marker categories.
+     * Gets the categories list.
      *
-     * @return the marker categories
+     * @return the categories list
      */
+    @SuppressWarnings("null")
     @Override
     public @NonNull List<@NonNull String> getMarkerCategories() {
         return fCategories;
@@ -103,15 +98,16 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
 
 
     /**
-     * Gets the marker list.
+     * Get the markers list.
      *
-     * @param category the category
-     * @param startTime the start time
-     * @param endTime the end time
-     * @param resolution the resolution
-     * @param monitor the monitor
-     * @return the marker list
+     * @param category : the category
+     * @param startTime : the start time stamp in ns
+     * @param endTime : the end time stamp in ns
+     * @param resolution : the resolution
+     * @param monitor : the monitor
+     * @return the marker events list
      */
+    @SuppressWarnings("null")
     @Override
     public @NonNull List<@NonNull IMarkerEvent> getMarkerList(@NonNull String category, long startTime, long endTime, long resolution, @NonNull IProgressMonitor monitor) {
         return fTraceMarkerEvents;
@@ -119,7 +115,7 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
 
 
     /**
-     * Dispose.
+     * Unregister the adapter.
      */
     @Override
     public void dispose() {

@@ -53,8 +53,9 @@ public class TraceMarkerEventSourceFactory extends AbstractTmfTraceAdapterFactor
     }
 
     /**
-     * Instantiate the adapter.
-     *
+     * Instantiate the marker adapter for a trace.
+     * @param trace : the active trace
+     * @param adapterType : the class of adapter
      * @return the adapter
      */
     @Override
@@ -68,7 +69,7 @@ public class TraceMarkerEventSourceFactory extends AbstractTmfTraceAdapterFactor
 
 
     /**
-     * Gets the adapter list.
+     * Get the adapter list.
      *
      * @return the adapter list
      */

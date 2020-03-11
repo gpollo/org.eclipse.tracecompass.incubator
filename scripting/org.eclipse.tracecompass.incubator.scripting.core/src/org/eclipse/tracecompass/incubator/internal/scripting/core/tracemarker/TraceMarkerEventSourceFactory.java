@@ -53,14 +53,15 @@ public class TraceMarkerEventSourceFactory extends AbstractTmfTraceAdapterFactor
     }
 
     /**
-     * Instantiate the adapter.
-     *
+     * Instantiate the marker adapter for a trace.
+     * @param trace : the active trace
+     * @param adapterType : the class of adapter
      * @return the adapter
      */
     @Override
     protected <T> T getTraceAdapter(ITmfTrace trace, Class<T> adapterType) {
         if (IMarkerEventSource.class.equals(adapterType)) {
-            TraceMarkerGeneratorModule adapter = new TraceMarkerGeneratorModule(trace);
+            ScriptingMarkerSource adapter = new ScriptingMarkerSource(trace);
             return adapterType.cast(adapter);
         }
         return null;
@@ -68,7 +69,7 @@ public class TraceMarkerEventSourceFactory extends AbstractTmfTraceAdapterFactor
 
 
     /**
-     * Gets the adapter list.
+     * Get the adapter list.
      *
      * @return the adapter list
      */

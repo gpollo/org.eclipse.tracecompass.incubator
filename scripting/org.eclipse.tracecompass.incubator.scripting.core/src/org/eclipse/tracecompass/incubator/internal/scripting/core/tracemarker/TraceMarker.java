@@ -8,78 +8,71 @@
  *******************************************************************************/
 package org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker;
 
-import java.awt.Color;
-import java.lang.reflect.Field;
-
+import org.eclipse.tracecompass.tmf.core.dataprovider.X11ColorUtils;
+import org.eclipse.tracecompass.tmf.core.presentation.RGBAColor;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.swt.graphics.RGBA;
 
 /**
  * The Class TraceMarker.
  *
- * @author mathir
+ * @author Maxime Thibault
+ * @author Ibrahima Sega Sangare
  */
 public class TraceMarker {
 
-    /** The Constant DEFAULT_CATEGORY. */
+    /** The DEFAULT_CATEGORY for the marker if it was left unspecified. */
     public static final String DEFAULT_CATEGORY = "Default"; //$NON-NLS-1$
 
-    /** The Constant DEFAULT_UNIT. */
-    public static final String DEFAULT_UNIT = "ns"; //$NON-NLS-1$
+    /** The DEFAULT_COLOR for the marker if it was left unspecified. */
+    public static final String DEFAULT_COLOR = "FF0000"; //$NON-NLS-1$
 
-    /** The Constant COLOR_PACKAGE. */
-    public static final String COLOR_PACKAGE = "java.awt.Color"; //$NON-NLS-1$
-
-    /** The Constant ALPHA. */
+    /** The constant ALPHA for the marker transparency. */
     private static final int ALPHA = 70;
 
-    /** The label. */
+    /** The hexadecimal base for the color conversion. */
+    private static final int HEX = 16;
+
+    /** The marker's label. */
     private final String fLabel;
 
-    /** The category. */
+    /** The marker's category. */
     private String fCategory;
 
-    /** The color. */
-    private Color fColor;
+    /** The marker's color in RGBA. */
+    private RGBA fRGBAColor;
 
-    /** The color RGBA. */
-    private RGBA fColorRGBA;
-
-    /** The start time. */
+    /** The marker's start time stamp in ns. */
     private final long fStartTime;
 
-    /** The duration. */
+    /** The marker's duration in ns. */
     private final long fDuration;
 
-    /** The end time. */
+    /** The marker's end time stamp in ns. */
     private final long fEndTime;
-
-    /** The unit. */
-    private final String fUnit;
 
 
     /**
-     * Instantiates a new trace marker.
+     * Instantiates a new trace marker object.
      *
-     * @param label the label
-     * @param category the category
-     * @param startTime the start time
-     * @param endTime the end time
-     * @param color the color
+     * @param label : the marker's label to show
+     * @param category : the marker's category
+     * @param startTime : the start of the marker in ns
+     * @param endTime : the end of the marker in ns
+     * @param color : the marker's highlight color
      */
     public TraceMarker(String label, @Nullable String category, long startTime, long endTime, @Nullable String color) {
         fLabel = label;
         setCategory(category);
-        setColor(color);
+        setRGBAColor(color);
         fStartTime = startTime;
         fEndTime = endTime;
         fDuration = (fEndTime - fStartTime);
-        fUnit = DEFAULT_UNIT;
     }
 
 
     /**
-     * Gets the label.
+     * Get the label.
      *
      * @return the label
      */
@@ -89,7 +82,7 @@ public class TraceMarker {
 
 
     /**
-     * Gets the category.
+     * Get the category.
      *
      * @return the category
      */
@@ -99,9 +92,9 @@ public class TraceMarker {
 
 
     /**
-     * Sets the category.
+     * Set the category depending on user input.
      *
-     * @param category the category to set
+     * @param category : the marker's category
      */
     public void setCategory(String category) {
         if (category != null) {
@@ -114,57 +107,44 @@ public class TraceMarker {
 
 
     /**
-     * Gets the color.
+     * Get the RGBA Color.
      *
-     * @return the color
+     * @return the RGBA color
      */
-    public Color getColor() {
-        return fColor;
+    public RGBA getRGBAColor() {
+        return fRGBAColor;
     }
 
 
     /**
-     * Gets the color RGBA.
+     * Set the RGBAColor of the marker by converting a color string into RGBA data.
      *
-     * @return the colorRGBA
+     * @param color : the marker's highlight color
      */
-    public RGBA getColorRGBA() {
-        return fColorRGBA;
-    }
+    private void setRGBAColor(String color) {
+        String hexColor;
 
-
-    /**
-     * Sets the color.
-     *
-     * @param color the color to set
-     */
-    public void setColor(String color) {
-        try {
-            Field field = Class.forName(COLOR_PACKAGE).getField(color);
-            fColor = (Color)field.get(null);
-
-        } catch(Exception e) {
-            fColor = Color.RED;
+        if(color != null && X11ColorUtils.toHexColor(color) != null) {
+            hexColor = X11ColorUtils.toHexColor(color);
+            // Get rid of the # at the beginning of the string
+            hexColor = hexColor.substring(1);
+        } else {
+            hexColor = DEFAULT_COLOR;
         }
-        setColorRGBA(fColor);
-    }
 
-
-    /**
-     * Sets the color RGBA.
-     */
-    private void setColorRGBA(Color color) {
-        fColorRGBA = new RGBA(color.getRed(),
-                              color.getBlue(),
-                              color.getGreen(),
+        int intColor = Integer.parseInt(hexColor, HEX);
+        RGBAColor rgbaColor = new RGBAColor(intColor);
+        fRGBAColor = new RGBA(rgbaColor.getRed(),
+                              rgbaColor.getBlue(),
+                              rgbaColor.getGreen(),
                               ALPHA);
     }
 
 
     /**
-     * Gets the start time.
+     * Get the start time stamp.
      *
-     * @return the start time
+     * @return the start time stamp in ns
      */
     public long getStartTime() {
         return fStartTime;
@@ -172,9 +152,9 @@ public class TraceMarker {
 
 
     /**
-     * Gets the duration.
+     * Get the duration.
      *
-     * @return the duration
+     * @return the duration in ns
      */
     public long getDuration() {
         return fDuration;
@@ -182,21 +162,12 @@ public class TraceMarker {
 
 
     /**
-     * Gets the end time.
+     * Get the end time stamp.
      *
-     * @return the end time
+     * @return the end time stamp in ns
      */
     public long getEndTime() {
         return fEndTime;
     }
 
-
-    /**
-     * Gets the unit.
-     *
-     * @return the unit
-     */
-    public String getUnit() {
-        return fUnit;
-    }
 }

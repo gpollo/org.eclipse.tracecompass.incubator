@@ -82,8 +82,7 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
         MarkerEvent traceMarkerEvent = new MarkerEvent(null, start, duration, category, color, label, true);
         fTraceMarkerEvents.add(traceMarkerEvent);
 
-        TmfMarkerEventSourceUpdatedSignal signal = new TmfMarkerEventSourceUpdatedSignal(this);
-        TmfSignalManager.dispatchSignal(signal);
+        TmfSignalManager.dispatchSignal(new TmfMarkerEventSourceUpdatedSignal(this));
     }
 
     /**

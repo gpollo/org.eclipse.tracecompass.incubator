@@ -1,10 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2020 Ecole Polytechnique de Montréal
  *
- * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0 which
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License 2.0 which
  * accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 
 package org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker;
@@ -39,11 +41,11 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
     /** The active trace. */
     private final ITmfTrace fTrace;
 
-
     /**
      * Instantiate and register a new trace marker source (adapter) to a trace.
      *
-     * @param trace the active trace
+     * @param trace
+     *            the active trace
      */
     public ScriptingMarkerSource(ITmfTrace trace) {
         fTrace = trace;
@@ -51,7 +53,6 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
         fCategories = new ArrayList<>();
         TmfSignalManager.register(this);
     }
-
 
     /**
      * Initialize the market events and categories list for a new script run.
@@ -62,16 +63,17 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
         fCategories.clear();
     }
 
-
     /**
-     * Convert trace marker object into a marker event and signal the time graph view.
+     * Convert trace marker object into a marker event and signal the time graph
+     * view.
      *
-     * @param traceMarker : the marker object to convert
+     * @param traceMarker
+     *            : the marker object to convert
      */
     public void configureMarker(TraceMarker traceMarker) {
         RGBA color = traceMarker.getRGBAColor();
         String category = traceMarker.getCategory();
-        if(!fCategories.contains(category)) {
+        if (!fCategories.contains(category)) {
             fCategories.add(category);
         }
         String label = traceMarker.getLabel();
@@ -84,7 +86,6 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
         TmfSignalManager.dispatchSignal(signal);
     }
 
-
     /**
      * Gets the categories list.
      *
@@ -96,15 +97,19 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
         return fCategories;
     }
 
-
     /**
      * Get the markers list.
      *
-     * @param category : the category
-     * @param startTime : the start time stamp in ns
-     * @param endTime : the end time stamp in ns
-     * @param resolution : the resolution
-     * @param monitor : the monitor
+     * @param category
+     *            : the category
+     * @param startTime
+     *            : the start time stamp in ns
+     * @param endTime
+     *            : the end time stamp in ns
+     * @param resolution
+     *            : the resolution
+     * @param monitor
+     *            : the monitor
      * @return the marker events list
      */
     @SuppressWarnings("null")
@@ -113,7 +118,6 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
         return fTraceMarkerEvents;
     }
 
-
     /**
      * Unregister the adapter.
      */
@@ -121,7 +125,6 @@ public class ScriptingMarkerSource implements IMarkerEventSource, IDisposableAda
     public void dispose() {
         TmfSignalManager.deregister(this);
     }
-
 
     /**
      * Get the trace linked to this adapter

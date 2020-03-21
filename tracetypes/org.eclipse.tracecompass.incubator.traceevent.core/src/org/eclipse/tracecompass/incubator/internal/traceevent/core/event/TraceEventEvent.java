@@ -2,9 +2,11 @@
  * Copyright (c) 2017 Ericsson
  *
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0 which
+ * available under the terms of the Eclipse Public License 2.0 which
  * accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 
 package org.eclipse.tracecompass.incubator.internal.traceevent.core.event;
@@ -19,7 +21,6 @@ import org.eclipse.tracecompass.tmf.core.event.ITmfEventField;
 import org.eclipse.tracecompass.tmf.core.event.TmfEvent;
 import org.eclipse.tracecompass.tmf.core.event.lookup.ITmfCallsite;
 import org.eclipse.tracecompass.tmf.core.event.lookup.ITmfSourceLookup;
-import org.eclipse.tracecompass.tmf.core.timestamp.TmfTimestamp;
 import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
 
 /**
@@ -57,7 +58,7 @@ public class TraceEventEvent extends TmfEvent implements ITmfSourceLookup {
      *            the event field, contains all the needed data
      */
     public TraceEventEvent(ITmfTrace trace, long rank, TraceEventField field) {
-        super(trace, rank, TmfTimestamp.fromNanos(field.getTs()), TraceEventLookup.get(field.getPhase()), field.getContent());
+        super(trace, rank, trace.createTimestamp(field.getTs()), TraceEventLookup.get(field.getPhase()), field.getContent());
         fField = field;
         fName = field.getName();
         fLogLevel = Level.INFO;

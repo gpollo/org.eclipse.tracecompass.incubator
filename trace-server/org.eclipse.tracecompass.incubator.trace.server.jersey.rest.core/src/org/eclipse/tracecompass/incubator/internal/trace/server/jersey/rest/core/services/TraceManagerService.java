@@ -2,9 +2,11 @@
  * Copyright (c) 2017 Ericsson
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License 2.0 which
  * accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 
 package org.eclipse.tracecompass.incubator.internal.trace.server.jersey.rest.core.services;
@@ -127,7 +129,10 @@ public class TraceManagerService {
 
         IResource resource = getResource(path);
 
+//        TmfTraceTypeUIUtils.setTraceType(resource, traceTypeHelper);
         TraceTypeHelper helper = traceTypes.get(0);
+        resource.setPersistentProperty(TmfCommonConstants.TRACETYPE, helper.getTraceTypeId());
+
         ITmfTrace trace = helper.getTraceClass().newInstance();
         trace.initTrace(resource, path, ITmfEvent.class, name, typeID);
         trace.indexTrace(false);
@@ -154,18 +159,19 @@ public class TraceManagerService {
     private static IResource getResource(String path) throws CoreException {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         IProject project = root.getProject(TmfCommonConstants.DEFAULT_TRACE_PROJECT_NAME);
+        IFolder tracesFolder = project.getFolder("Traces");
         IPath iPath = org.eclipse.core.runtime.Path.forPosix(path);
 
         IResource resource = null;
         boolean isSuccess = false;
         // create the resource hierarchy.
         if (new File(path).isFile()) {
-            IFile file = project.getFile(path);
+            IFile file = tracesFolder.getFile(path);
             createFolder((IFolder) file.getParent(), null);
             isSuccess = ResourceUtil.createSymbolicLink(file, iPath, true, null);
             resource = file;
         } else {
-            IFolder folder = project.getFolder(path);
+            IFolder folder = tracesFolder.getFolder(path);
             createFolder((IFolder) folder.getParent(), null);
             isSuccess = ResourceUtil.createSymbolicLink(folder, iPath, true, null);
             resource = folder;

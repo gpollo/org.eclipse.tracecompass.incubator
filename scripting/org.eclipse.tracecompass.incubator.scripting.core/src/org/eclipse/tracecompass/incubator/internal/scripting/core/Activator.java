@@ -2,16 +2,18 @@
  * Copyright (c) 2019 Ecole Polytechnique de Montreal
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License 2.0 which
  * accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 
 package org.eclipse.tracecompass.incubator.internal.scripting.core;
 
 import org.eclipse.tracecompass.common.core.TraceCompassActivator;
 import org.eclipse.tracecompass.incubator.internal.scripting.core.data.provider.ScriptingDataProviderManager;
-import org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker.TraceMarkerEventSourceFactory;
+import org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker.ScriptingMarkerSourceFactory;
 
 /**
  * Activator
@@ -40,13 +42,13 @@ public class Activator extends TraceCompassActivator {
     @Override
     protected void startActions() {
         ScriptingDataProviderManager.getInstance();
-        TraceMarkerEventSourceFactory.getInstance().register();
+        ScriptingMarkerSourceFactory.getInstance().register();
     }
 
     @Override
     protected void stopActions() {
         ScriptingDataProviderManager.dispose();
-        TraceMarkerEventSourceFactory.getInstance().unregister();
+        ScriptingMarkerSourceFactory.getInstance().unregister();
     }
 
 }

@@ -2,9 +2,11 @@
  * Copyright (c) 2020 École Polytechnique de Montréal
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License 2.0 which
  * accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 
 package org.eclipse.tracecompass.incubator.internal.kernel.core.criticalpath;
@@ -15,6 +17,7 @@ import java.util.Objects;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.tracecompass.analysis.graph.core.criticalpath.CriticalPathModule;
+import org.eclipse.tracecompass.incubator.analysis.core.weighted.tree.IDataPalette;
 import org.eclipse.tracecompass.incubator.analysis.core.weighted.tree.IWeightedTreeProvider;
 import org.eclipse.tracecompass.incubator.analysis.core.weighted.tree.IWeightedTreeSet;
 import org.eclipse.tracecompass.incubator.analysis.core.weighted.tree.WeightedTree;
@@ -104,6 +107,11 @@ public class CriticalPathAggregatedModule extends TmfAbstractAnalysisModule impl
             return CriticalPathWeighted.create(null);
         }
         return CriticalPathWeighted.create(module.getCriticalPath());
+    }
+
+    @Override
+    public IDataPalette getPalette() {
+        return CriticalPathAggregatedPalette.getInstance();
     }
 
 }

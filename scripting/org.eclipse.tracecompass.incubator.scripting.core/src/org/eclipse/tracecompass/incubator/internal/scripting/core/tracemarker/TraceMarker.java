@@ -1,10 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2020 Ecole Polytechnique de Montréal
  *
- * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0 which
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License 2.0 which
  * accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 package org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker;
 
@@ -51,15 +53,19 @@ public class TraceMarker {
     /** The marker's end time stamp in ns. */
     private final long fEndTime;
 
-
     /**
      * Instantiates a new trace marker object.
      *
-     * @param label : the marker's label to show
-     * @param category : the marker's category
-     * @param startTime : the start of the marker in ns
-     * @param endTime : the end of the marker in ns
-     * @param color : the marker's highlight color
+     * @param label
+     *            : the marker's label to show
+     * @param category
+     *            : the marker's category
+     * @param startTime
+     *            : the start of the marker in ns
+     * @param endTime
+     *            : the end of the marker in ns
+     * @param color
+     *            : the marker's highlight color
      */
     public TraceMarker(String label, @Nullable String category, long startTime, long endTime, @Nullable String color) {
         fLabel = label;
@@ -70,7 +76,6 @@ public class TraceMarker {
         fDuration = (fEndTime - fStartTime);
     }
 
-
     /**
      * Get the label.
      *
@@ -79,7 +84,6 @@ public class TraceMarker {
     public String getLabel() {
         return fLabel;
     }
-
 
     /**
      * Get the category.
@@ -90,11 +94,11 @@ public class TraceMarker {
         return fCategory;
     }
 
-
     /**
      * Set the category depending on user input.
      *
-     * @param category : the marker's category
+     * @param category
+     *            : the marker's category
      */
     public void setCategory(String category) {
         if (category != null) {
@@ -105,7 +109,6 @@ public class TraceMarker {
         }
     }
 
-
     /**
      * Get the RGBA Color.
      *
@@ -115,17 +118,17 @@ public class TraceMarker {
         return fRGBAColor;
     }
 
-
     /**
-     * Set the RGBAColor of the marker by converting a color string into RGBA data.
+     * Set the RGBAColor of the marker by converting a color string into RGBA
+     * data.
      *
-     * @param color : the marker's highlight color
+     * @param color
+     *            : the marker's highlight color
      */
-    private void setRGBAColor(String color) {
-        String hexColor;
+    private void setRGBAColor(@Nullable String color) {
+        String hexColor = color;
 
-        if(color != null && X11ColorUtils.toHexColor(color) != null) {
-            hexColor = X11ColorUtils.toHexColor(color);
+        if (hexColor != null && (hexColor = X11ColorUtils.toHexColor(hexColor)) != null) {
             // Get rid of the # at the beginning of the string
             hexColor = hexColor.substring(1);
         } else {
@@ -135,11 +138,10 @@ public class TraceMarker {
         int intColor = Integer.parseInt(hexColor, HEX);
         RGBAColor rgbaColor = new RGBAColor(intColor);
         fRGBAColor = new RGBA(rgbaColor.getRed(),
-                              rgbaColor.getBlue(),
-                              rgbaColor.getGreen(),
-                              ALPHA);
+                rgbaColor.getBlue(),
+                rgbaColor.getGreen(),
+                ALPHA);
     }
-
 
     /**
      * Get the start time stamp.
@@ -150,7 +152,6 @@ public class TraceMarker {
         return fStartTime;
     }
 
-
     /**
      * Get the duration.
      *
@@ -159,7 +160,6 @@ public class TraceMarker {
     public long getDuration() {
         return fDuration;
     }
-
 
     /**
      * Get the end time stamp.

@@ -1,10 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2020 Ecole Polytechnique de Montréal
  *
- * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0 which
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License 2.0 which
  * accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 package org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker;
 
@@ -21,18 +23,18 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.IMarkerEventSourc
  * @author Maxime Thibeault
  * @author Gabriel-Andrew Pollo-Guilbert
  */
-public class TraceMarkerEventSourceFactory extends AbstractTmfTraceAdapterFactory {
+public class ScriptingMarkerSourceFactory extends AbstractTmfTraceAdapterFactory {
 
-    private static @Nullable TraceMarkerEventSourceFactory INSTANCE;
+    private static @Nullable ScriptingMarkerSourceFactory INSTANCE;
 
     /**
      * Get the instance of the factory.
      *
      * @return the singleton instance
      */
-    public synchronized static TraceMarkerEventSourceFactory getInstance() {
+    public synchronized static ScriptingMarkerSourceFactory getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new TraceMarkerEventSourceFactory();
+            INSTANCE = new ScriptingMarkerSourceFactory();
         }
 
         return INSTANCE;
@@ -54,8 +56,11 @@ public class TraceMarkerEventSourceFactory extends AbstractTmfTraceAdapterFactor
 
     /**
      * Instantiate the marker adapter for a trace.
-     * @param trace : the active trace
-     * @param adapterType : the class of adapter
+     *
+     * @param trace
+     *            : the active trace
+     * @param adapterType
+     *            : the class of adapter
      * @return the adapter
      */
     @Override
@@ -66,7 +71,6 @@ public class TraceMarkerEventSourceFactory extends AbstractTmfTraceAdapterFactor
         }
         return null;
     }
-
 
     /**
      * Get the adapter list.

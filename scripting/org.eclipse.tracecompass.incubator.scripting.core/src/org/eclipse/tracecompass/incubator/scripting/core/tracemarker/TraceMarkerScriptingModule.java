@@ -13,6 +13,7 @@ package org.eclipse.tracecompass.incubator.scripting.core.tracemarker;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.ease.modules.ScriptParameter;
 import org.eclipse.ease.modules.WrapToScript;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker.TraceMarker;
@@ -28,6 +29,20 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.IMarkerEventSourc
  * @author Maxime Thibault
  */
 public class TraceMarkerScriptingModule {
+    /** The DEFAULT_ENDTIME for the marker if it was left unspecified. */
+    public static final String DEFAULT_ENDTIME = "-1"; //$NON-NLS-1$
+
+    /** The DEFAULT_DURATION for the marker if it was left unspecified. */
+    public static final long DEFAULT_DURATION = 100;
+
+    /** The DEFAULT_LABEL for the marker if it was left unspecified. */
+    public static final String DEFAULT_LABEL = "TraceMarker"; //$NON-NLS-1$
+
+    /** The DEFAULT_CATEGORY for the marker if it was left unspecified. */
+    public static final String DEFAULT_CATEGORY = "Generals markers"; //$NON-NLS-1$
+
+    /** The DEFAULT_COLOR for the marker if it was left unspecified. */
+    public static final String DEFAULT_COLOR = "Red"; //$NON-NLS-1$
 
     /**
      * The message INVALID_START_TIMESTAMPT to print if the marker was set with
@@ -74,7 +89,8 @@ public class TraceMarkerScriptingModule {
      *            : the marker's highlight color
      */
     @WrapToScript
-    public void addTraceMarker(String label, @Nullable String category, long startTime, long endTime, @Nullable String color) {
+    public void addTraceMarker(long startTime, @ScriptParameter(defaultValue = DEFAULT_ENDTIME) long endTime, @ScriptParameter(defaultValue = DEFAULT_LABEL) String label, @ScriptParameter(defaultValue = DEFAULT_CATEGORY) String category,
+            @ScriptParameter(defaultValue = DEFAULT_COLOR) String color) {
         if (fSourceStatus == 0) {
             initializeScriptingMarkerSource();
         }
@@ -98,16 +114,23 @@ public class TraceMarkerScriptingModule {
      * @param color
      *            : the marker's highlight color
      */
-    private boolean createTraceMarker(String label, @Nullable String category, long startTime, long endTime, @Nullable String color) {
-        if (startTime > endTime || endTime > fTrace.getTimeRange().getEndTime().toNanos()) {
+    private boolean createTraceMarker(String label, @Nullable String category, long startTime, long endTime, String color) {
+        long calculatedEndTime = endTime;
+
+        if (calculatedEndTime == Long.valueOf(DEFAULT_ENDTIME)) {
+            calculatedEndTime = startTime + DEFAULT_DURATION;
+        }
+
+        if (startTime > calculatedEndTime || calculatedEndTime > fTrace.getTimeRange().getEndTime().toNanos()) {
             System.out.println(INVALID_END_TIMESTAMPT);
             return false;
         }
+
         if (startTime < fTrace.getTimeRange().getStartTime().toNanos()) {
             System.out.println(INVALID_START_TIMESTAMPT);
             return false;
         }
-        TraceMarker traceMarker = new TraceMarker(label, category, startTime, endTime, color);
+        TraceMarker traceMarker = new TraceMarker(label, category, startTime, calculatedEndTime, color);
         fTraceMarkersList.add(traceMarker);
         return true;
     }

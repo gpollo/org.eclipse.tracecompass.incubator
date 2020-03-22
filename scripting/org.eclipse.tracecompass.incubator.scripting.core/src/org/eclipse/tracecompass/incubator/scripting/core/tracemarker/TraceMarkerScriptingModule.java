@@ -78,15 +78,18 @@ public class TraceMarkerScriptingModule {
      * Adds a trace marker to the time graph view.
      *
      * @param label
-     *            : the marker's label to show
+     *            : the marker's label to show (it's name)
      * @param category
-     *            : the marker's group category
+     *            : the marker's group category (can be anything and is used to
+     *            group markers together in sets that can be enabled/disabled)
      * @param startTime
-     *            : the start of the marker in ns
+     *            : the starting time stamp of the marker in ns
      * @param endTime
-     *            : the end of the marker in ns
+     *            : the ending time stamp of the marker in ns
      * @param color
-     *            : the marker's highlight color
+     *            : the marker's highlighting color in X11 format (ex: "Red",
+     *            "Green", "Cyan", "Gold", more at
+     *            https://en.wikipedia.org/wiki/X11_color_names)
      */
     @WrapToScript
     public void addTraceMarker(long startTime, @ScriptParameter(defaultValue = DEFAULT_ENDTIME) long endTime, @ScriptParameter(defaultValue = DEFAULT_LABEL) String label, @ScriptParameter(defaultValue = DEFAULT_CATEGORY) String category,

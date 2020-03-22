@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2020 École Polytechnique de Montréal
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License 2.0 which
+ * accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *******************************************************************************/
+
 package org.eclipse.tracecompass.incubator.scripting.core.tests.trace.marker;
 
 import static org.junit.Assert.assertEquals;
@@ -24,7 +35,6 @@ import org.eclipse.swt.graphics.RGBA;
 import org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker.*;
 import org.eclipse.tracecompass.incubator.scripting.core.tests.ActivatorTest;
 import org.eclipse.tracecompass.incubator.scripting.core.tests.stubs.ScriptingTestUtils;
-import org.eclipse.tracecompass.incubator.scripting.core.trace.TraceScriptingModule;
 import org.eclipse.tracecompass.incubator.scripting.core.tracemarker.TraceMarkerScriptingModule;
 import org.eclipse.tracecompass.tmf.core.TmfCommonConstants;
 import org.eclipse.tracecompass.tmf.core.dataprovider.X11ColorUtils;
@@ -37,6 +47,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+
+/**
+ * Test the following classes
+ * {@link TraceMarker}
+ * {@link TraceMarkerEventSourceFactory}
+ * {@link TraceMarkerScriptingModule}
+ * {@link ScriptingMarkerSource}
+ *
+ * @author Ibrahima Sega Sangare
+ */
 public class TraceMarkerTest {
 
  // ------------------------------------------------------------------------

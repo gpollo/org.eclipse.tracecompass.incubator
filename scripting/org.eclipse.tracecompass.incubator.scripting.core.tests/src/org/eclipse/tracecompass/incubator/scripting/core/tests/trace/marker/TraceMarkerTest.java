@@ -1,6 +1,7 @@
 package org.eclipse.tracecompass.incubator.scripting.core.tests.trace.marker;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -23,14 +24,14 @@ import org.eclipse.swt.graphics.RGBA;
 import org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker.*;
 import org.eclipse.tracecompass.incubator.scripting.core.tests.ActivatorTest;
 import org.eclipse.tracecompass.incubator.scripting.core.tests.stubs.ScriptingTestUtils;
+import org.eclipse.tracecompass.incubator.scripting.core.trace.TraceScriptingModule;
+import org.eclipse.tracecompass.incubator.scripting.core.tracemarker.TraceMarkerScriptingModule;
 import org.eclipse.tracecompass.tmf.core.TmfCommonConstants;
 import org.eclipse.tracecompass.tmf.core.dataprovider.X11ColorUtils;
 import org.eclipse.tracecompass.tmf.core.io.ResourceUtil;
 import org.eclipse.tracecompass.tmf.core.presentation.RGBAColor;
 import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
-import org.eclipse.tracecompass.tmf.core.trace.TmfTraceAdapterManager;
 import org.eclipse.tracecompass.tmf.tests.stubs.trace.xml.TmfXmlTraceStub;
-import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.IMarkerEventSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +43,7 @@ public class TraceMarkerTest {
     // Attributes
     // ------------------------------------------------------------------------
 
-    private static final @NonNull String SOME_PROJECT_NAME = "myProject";
+    private static final @NonNull String SOME_PROJECT_NAME = "traceMarkerProject";
     private static final @NonNull String TRACE_PATH = "testfiles/traces/callstack.xml";
     private static final @NonNull String TRACE_FILE = "callstack.xml";
     private static final @NonNull String TRACE_FOLDER_PATH = "folder";
@@ -52,11 +53,14 @@ public class TraceMarkerTest {
     private static final TemporaryFolder TEMPORARY_FOLDER = new TemporaryFolder();
     /** The constant ALPHA for the marker transparency. */
     private static final int ALPHA = 70;
+    private static final String DEFAULT_COLOR = "Red";
 
     private IProject fProject;
     private ITmfTrace fTrace;
     private ScriptingMarkerSource fScriptingMarkerSource;
     private ScriptingMarkerSourceFactory fScriptingMarkerSourceFactory;
+    private TraceMarkerScriptingModule fTraceMarkerScriptingModule;
+
 
     // ------------------------------------------------------------------------
     // Initialization
@@ -93,6 +97,14 @@ public class TraceMarkerTest {
             folder.create(true, true, PROGRESS_MONITOR);
         }
 
+        // Initialize test trace
+        fTrace = ScriptingTestUtils.getTrace();
+        assertNotNull(fTrace);
+        assertTrue(fTrace instanceof TmfXmlTraceStub);
+
+        // Test: Try to add marker before trace exists in project
+        assertFalse(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "", "", DEFAULT_COLOR));
+
         // Add the trace
         IPath filePath = ActivatorTest.getAbsoluteFilePath(TRACE_PATH);
         IResource resource = folder.getFile(TRACE_FILE);
@@ -120,25 +132,18 @@ public class TraceMarkerTest {
         assertNotNull(resource);
         assertTrue(ResourceUtil.createSymbolicLink(resource, new Path(NONESISTENT_TRACE_IN_EXISTENT_PATH), true, PROGRESS_MONITOR));
 
-        // Initialize test trace
-        fTrace = ScriptingTestUtils.getTrace();
-        assertNotNull(fTrace);
-        assertTrue(fTrace instanceof TmfXmlTraceStub);
-
         // Initialize scriptingMarkerSource
         fScriptingMarkerSource = new ScriptingMarkerSource(fTrace);
         fScriptingMarkerSource.initializeAdapterMarkersLists();
+        assertTrue(fTrace.equals(fScriptingMarkerSource.getTrace()));
         assertNotNull(fScriptingMarkerSource);
         assertNotNull(fScriptingMarkerSource.getMarkerCategories());
         assertTrue(fScriptingMarkerSource.getMarkerCategories().isEmpty());
-        assertNotNull(fScriptingMarkerSource.getMarkerCategories());
 
         // Initialize scriptingMarkerSourceFactory
         fScriptingMarkerSourceFactory = ScriptingMarkerSourceFactory.getInstance();
         assertNotNull(fScriptingMarkerSourceFactory);
         assertNotNull(fScriptingMarkerSourceFactory.getAdapterList()[0]);
-        assertTrue(fScriptingMarkerSourceFactory.getAdapterList()[0] instanceof IMarkerEventSource);
-
     }
 
     /**
@@ -180,6 +185,46 @@ public class TraceMarkerTest {
     @Test
     public void testMarkerTimeStamp() {
 
+        long startTime = -10;
+        long endTime = -2;
+        long halfDuration = (fTrace.getStartTime().toNanos() + fTrace.getEndTime().toNanos()) / 2;
+
+        // Test: negative value for startTime
+        assertFalse(fTraceMarkerScriptingModule.addTraceMarker(startTime, fTrace.getEndTime().toNanos(), "", "", DEFAULT_COLOR));
+
+        // Test: negative value for endTime
+        assertFalse(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos(), endTime, "", "", ""));
+
+        // Test: negative values for both startTime and endTime
+        assertFalse(fTraceMarkerScriptingModule.addTraceMarker(startTime, endTime, "", "", ""));
+
+        // Test: startTime greater than endtime
+        assertFalse(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getEndTime().toNanos(), fTrace.getStartTime().toNanos(), "", "", ""));
+
+        // Test: startTime equal to endTime
+        assertFalse(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos(), fTrace.getStartTime().toNanos(), "", "", ""));
+
+        // Test: startTime below startTime of trace
+        assertFalse(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos() - 1, fTrace.getStartTime().toNanos(), "", "", ""));
+
+        // Test: endTime above endTime of trace
+        assertFalse(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos(), fTrace.getStartTime().toNanos() + 1, "", "", ""));
+
+        // Test: startTime and endTime below outside of trace time range
+        assertFalse(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos() - 1, fTrace.getStartTime().toNanos() + 1, "", "", ""));
+
+        // Test: startTime equal to starTime of trace
+        assertTrue(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos(), fTrace.getStartTime().toNanos() + halfDuration, "", "", ""));
+
+        // Test: endTime equal to endTime of trace
+        assertTrue(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos() + halfDuration, fTrace.getEndTime().toNanos(), "", "", ""));
+
+        // Test: duration equal to duration of trace
+        assertTrue(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "", "", ""));
+
+        // Test: startTime and endTime inside trace time range
+        assertTrue(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos() + 1, fTrace.getEndTime().toNanos() - 1, "", "", ""));
+
     }
 
     @Test
@@ -195,6 +240,16 @@ public class TraceMarkerTest {
 
     @Test
     public void testAdaptersMarkersLists() {
+
+    }
+
+    @Test
+    public void testAddTraceMarker() {
+
+    }
+
+    @Test
+    public void testConfigureTraceMarker() {
 
     }
 

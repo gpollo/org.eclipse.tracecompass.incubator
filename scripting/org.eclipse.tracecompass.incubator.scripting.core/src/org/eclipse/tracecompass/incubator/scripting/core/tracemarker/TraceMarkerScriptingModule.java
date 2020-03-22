@@ -45,16 +45,16 @@ public class TraceMarkerScriptingModule {
     public static final String DEFAULT_COLOR = "Red"; //$NON-NLS-1$
 
     /**
-     * The message INVALID_START_TIMESTAMPT to print if the marker was set with
+     * The message INVALID_START_TIMESTAMP to print if the marker was set with
      * an bad start time stamp.
      */
-    public static final String INVALID_START_TIMESTAMPT = "Invalid start time"; //$NON-NLS-1$
+    public static final String INVALID_START_TIMESTAMP = "Invalid start time"; //$NON-NLS-1$
 
     /**
-     * The message INVALID_END_TIMESTAMPT to print if the marker was set with an
+     * The message INVALID_END_TIMESTAMP to print if the marker was set with an
      * bad end time stamp.
      */
-    public static final String INVALID_END_TIMESTAMPT = "Invalid end time"; //$NON-NLS-1$
+    public static final String INVALID_END_TIMESTAMP = "Invalid end time"; //$NON-NLS-1$
 
     /**
      * The message INVALID_TRACE to print if the active trace is invalid or
@@ -92,15 +92,17 @@ public class TraceMarkerScriptingModule {
      *            https://en.wikipedia.org/wiki/X11_color_names)
      */
     @WrapToScript
-    public void addTraceMarker(long startTime, @ScriptParameter(defaultValue = DEFAULT_ENDTIME) long endTime, @ScriptParameter(defaultValue = DEFAULT_LABEL) String label, @ScriptParameter(defaultValue = DEFAULT_CATEGORY) String category,
+    public boolean addTraceMarker(long startTime, @ScriptParameter(defaultValue = DEFAULT_ENDTIME) long endTime, @ScriptParameter(defaultValue = DEFAULT_LABEL) String label, @ScriptParameter(defaultValue = DEFAULT_CATEGORY) String category,
             @ScriptParameter(defaultValue = DEFAULT_COLOR) String color) {
         if (fSourceStatus == 0) {
             initializeScriptingMarkerSource();
         }
-        if (createTraceMarker(label, category, startTime, endTime, color)) {
+        if ((fSourceStatus != 0) && createTraceMarker(label, category, startTime, endTime, color)) {
             // Configure with the adapter the last added trace marker
             fSource.configureMarker(fTraceMarkersList.get(fTraceMarkersList.size() - 1));
+            return true;
         }
+        return false;
     }
 
     /**
@@ -125,12 +127,12 @@ public class TraceMarkerScriptingModule {
         }
 
         if (startTime > calculatedEndTime || calculatedEndTime > fTrace.getTimeRange().getEndTime().toNanos()) {
-            System.out.println(INVALID_END_TIMESTAMPT);
+            System.out.println(INVALID_END_TIMESTAMP);
             return false;
         }
 
         if (startTime < fTrace.getTimeRange().getStartTime().toNanos()) {
-            System.out.println(INVALID_START_TIMESTAMPT);
+            System.out.println(INVALID_START_TIMESTAMP);
             return false;
         }
         TraceMarker traceMarker = new TraceMarker(label, category, startTime, calculatedEndTime, color);
@@ -144,7 +146,6 @@ public class TraceMarkerScriptingModule {
     private void initializeScriptingMarkerSource() {
         if (TmfTraceManager.getInstance().getActiveTrace() != null) {
             fTrace = TmfTraceManager.getInstance().getActiveTrace();
-
             for (IMarkerEventSource source : TmfTraceAdapterManager.getAdapters(fTrace, IMarkerEventSource.class)) {
                 if (source.getClass() == ScriptingMarkerSource.class) {
                     fTraceMarkersList = new ArrayList<>();

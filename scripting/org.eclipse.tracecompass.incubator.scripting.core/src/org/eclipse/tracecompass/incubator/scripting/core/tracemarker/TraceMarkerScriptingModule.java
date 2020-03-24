@@ -135,6 +135,11 @@ public class TraceMarkerScriptingModule {
             System.out.println(INVALID_START_TIMESTAMP);
             return false;
         }
+
+        if (startTime == calculatedEndTime) {
+            System.out.println(INVALID_START_TIMESTAMP);
+            return false;
+        }
         TraceMarker traceMarker = new TraceMarker(label, category, startTime, calculatedEndTime, color);
         fTraceMarkersList.add(traceMarker);
         return true;

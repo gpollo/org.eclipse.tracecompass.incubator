@@ -74,7 +74,9 @@ public class TraceMarkerTest {
     /** The constant ALPHA for the marker transparency. */
     private static final int ALPHA = 70;
     private static final String DEFAULT_COLOR = "Red";
-
+    private static final String[] TEST_COLORS = {null, "Dark Orange", "Black", "Burlywood", "Cyan", "Chartreuse", "Azure", "Yellow Green", "Silver"};
+    private static final String[] TEST_LABELS = {null, "Default Marker", "Test", "Ericsson Marker", ""};
+    private static final String[] TEST_CATEGORIES = {null, "Default", "Analysis", "Performance"};
     private IProject fProject;
     private ITmfTrace fTrace;
     private ScriptingMarkerSource fScriptingMarkerSource;
@@ -188,18 +190,27 @@ public class TraceMarkerTest {
     // ------------------------------------------------------------------------
     @Test
     public void testMarkerColor() {
-        TraceMarker traceMarker = new TraceMarker("marker1", "", 0, 50, "blue");
-        assertNotNull(traceMarker.getCategory());
 
-        RGBAColor rgbaColor = new RGBAColor(Integer.parseInt(X11ColorUtils.toHexColor("blue").substring(1)));
-        RGBA colorToCompare = new RGBA(rgbaColor.getRed(), rgbaColor.getGreen(), rgbaColor.getBlue(), ALPHA);
-        assertTrue(traceMarker.getRGBAColor().equals(colorToCompare));
+        RGBAColor rgbaColor;
+        RGBA rgbaColorToCompare;
+        // Test: Marker has correct color
+        for (int i = 0; i < TEST_COLORS.length; i++) {
+            TraceMarker traceMarker = new TraceMarker("Marker" + String.valueOf(i), null, fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(),
+                                                      TEST_COLORS[i]);
+            rgbaColor = new RGBAColor(Integer.parseInt(X11ColorUtils.toHexColor(TEST_COLORS[i]).substring(1)));
+            rgbaColorToCompare = new RGBA(rgbaColor.getRed(), rgbaColor.getGreen(), rgbaColor.getBlue(), ALPHA);
+            assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
+        }
 
-        traceMarker = new TraceMarker("marker2", "", 0, 50, "");
-        assertEquals(traceMarker.getRGBAColor(), Integer.parseInt("FF0000"));
+        // Test: Marker has default color when color parameter is an empty string
+        TraceMarker traceMarker = new TraceMarker("marker2", "", fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "");
+        rgbaColor = new RGBAColor(Integer.parseInt(X11ColorUtils.toHexColor(DEFAULT_COLOR).substring(1)));
+        rgbaColorToCompare = new RGBA(rgbaColor.getRed(), rgbaColor.getGreen(), rgbaColor.getBlue(), ALPHA);
+        assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
 
-        traceMarker = new TraceMarker("marker3", "", 0, 50, "invalid");
-        assertEquals(traceMarker.getRGBAColor(), Integer.parseInt("FF0000"));
+        // Test: Marker has default color when invalid color is passed as a parameter
+        traceMarker = new TraceMarker("marker3", "", fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "invalid");
+        assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
     }
 
     @Test
@@ -250,21 +261,23 @@ public class TraceMarkerTest {
     @Test
     public void testMarkerLabel() {
 
+        for (int i = 0; i < TEST_LABELS.length; i++) {
+            TraceMarker traceMarker = new TraceMarker(TEST_LABELS[i], null, fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "");
+            assertTrue(traceMarker.getLabel().equals(TEST_LABELS[i]));
+        }
     }
 
     @Test
     public void testMarkerCategory(){
-        TraceMarker traceMarker = new TraceMarker("marker1", "", 0, 50, "blue");
-        assertNotNull(traceMarker.getCategory());
+
+        for (int i = 0; i < TEST_CATEGORIES.length; i++) {
+            TraceMarker traceMarker = new TraceMarker("", TEST_CATEGORIES[i], fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "");
+            assertTrue(traceMarker.getCategory().equals(TEST_CATEGORIES[i]));
+        }
     }
 
     @Test
     public void testAdaptersMarkersLists() {
-
-    }
-
-    @Test
-    public void testAddTraceMarker() {
 
     }
 

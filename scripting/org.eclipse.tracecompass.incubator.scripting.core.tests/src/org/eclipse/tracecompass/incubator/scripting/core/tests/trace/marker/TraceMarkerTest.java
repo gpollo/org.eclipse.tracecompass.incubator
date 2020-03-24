@@ -11,13 +11,11 @@
 
 package org.eclipse.tracecompass.incubator.scripting.core.tests.trace.marker;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -49,19 +47,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-
 /**
- * Test the following classes
- * {@link TraceMarker}
- * {@link TraceMarkerEventSourceFactory}
- * {@link TraceMarkerScriptingModule}
+ * Test the following classes {@link TraceMarker}
+ * {@link TraceMarkerEventSourceFactory} {@link TraceMarkerScriptingModule}
  * {@link ScriptingMarkerSource}
  *
  * @author Ibrahima Sega Sangare
  */
 public class TraceMarkerTest {
 
- // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     // Attributes
     // ------------------------------------------------------------------------
 
@@ -76,15 +71,14 @@ public class TraceMarkerTest {
     /** The constant ALPHA for the marker transparency. */
     private static final int ALPHA = 70;
     private static final String DEFAULT_COLOR = "Red";
-    private static final String[] TEST_COLORS = {"Dark Orange", "Black", "Burlywood", "Cyan", "Chartreuse", "Azure", "Yellow Green", "Silver"};
-    private static final String[] TEST_LABELS = {"Default Marker", "Test", "Ericsson Marker", ""};
-    private static final String[] TEST_CATEGORIES = {"Default", "Analysis", "Performance"};
+    private static final String[] TEST_COLORS = { "Dark Orange", "Black", "Burlywood", "Cyan", "Chartreuse", "Azure", "Yellow Green", "Silver" };
+    private static final String[] TEST_LABELS = { "Default Marker", "Test", "Ericsson Marker", "" };
+    private static final String[] TEST_CATEGORIES = { "Default", "Analysis", "Performance" };
     private IProject fProject;
     private ITmfTrace fTrace;
     private ScriptingMarkerSource fScriptingMarkerSource;
     private ScriptingMarkerSourceFactory fScriptingMarkerSourceFactory;
     private TraceMarkerScriptingModule fTraceMarkerScriptingModule;
-
 
     // ------------------------------------------------------------------------
     // Initialization
@@ -197,29 +191,31 @@ public class TraceMarkerTest {
     @Test
     public void testMarkerColor() {
 
-
         RGBAColor rgbaColor;
         RGBA rgbaColorToCompare;
         // Test: Marker has correct color
         for (int i = 0; i < TEST_COLORS.length; i++) {
             TraceMarker traceMarker = new TraceMarker("Marker" + String.valueOf(i), null, fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(),
-                                                      TEST_COLORS[i]);
+                    TEST_COLORS[i]);
             rgbaColor = new RGBAColor(Integer.parseInt(X11ColorUtils.toHexColor(TEST_COLORS[i]).substring(1)));
             rgbaColorToCompare = new RGBA(rgbaColor.getRed(), rgbaColor.getGreen(), rgbaColor.getBlue(), ALPHA);
             assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
         }
 
-        // Test: Marker has default color when color parameter is an empty string
+        // Test: Marker has default color when color parameter is an empty
+        // string
         TraceMarker traceMarker = new TraceMarker("marker2", "", fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "");
         rgbaColor = new RGBAColor(Integer.parseInt(X11ColorUtils.toHexColor(DEFAULT_COLOR).substring(1)));
         rgbaColorToCompare = new RGBA(rgbaColor.getRed(), rgbaColor.getGreen(), rgbaColor.getBlue(), ALPHA);
         assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
 
-        // Test: Marker has default color when invalid color is passed as a parameter
+        // Test: Marker has default color when invalid color is passed as a
+        // parameter
         traceMarker = new TraceMarker("marker3", "", fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "invalid");
         assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
 
-        // Test: Marker has default color when null color is passed as a parameter
+        // Test: Marker has default color when null color is passed as a
+        // parameter
         traceMarker = new TraceMarker("marker4", "", fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), null);
         assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
     }
@@ -291,7 +287,7 @@ public class TraceMarkerTest {
      * Test: marker category is correct
      */
     @Test
-    public void testMarkerCategory(){
+    public void testMarkerCategory() {
 
         for (int i = 0; i < TEST_CATEGORIES.length; i++) {
             TraceMarker traceMarker = new TraceMarker("", TEST_CATEGORIES[i], fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "");
@@ -302,9 +298,9 @@ public class TraceMarkerTest {
         assertTrue(traceMarker.getCategory() == null);
     }
 
-
     /**
-     * Test: verify marker configuration via added categories and added MarkerEvent objects
+     * Test: verify marker configuration via added categories and added
+     * MarkerEvent objects
      */
     @Test
     public void testConfigureTraceMarker() {

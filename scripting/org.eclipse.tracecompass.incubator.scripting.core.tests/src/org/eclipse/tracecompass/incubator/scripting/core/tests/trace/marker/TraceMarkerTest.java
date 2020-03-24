@@ -17,6 +17,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -189,6 +190,10 @@ public class TraceMarkerTest {
     // ------------------------------------------------------------------------
     // Test Cases
     // ------------------------------------------------------------------------
+
+    /**
+     * Test: assign different colors to a marker at its creation
+     */
     @Test
     public void testMarkerColor() {
 
@@ -219,6 +224,9 @@ public class TraceMarkerTest {
         assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
     }
 
+    /**
+     * Test: assign different timestamps to a marker
+     */
     @Test
     public void testMarkerTimeStamp() {
 
@@ -264,6 +272,9 @@ public class TraceMarkerTest {
 
     }
 
+    /**
+     * Test: Marker label is correct
+     */
     @Test
     public void testMarkerLabel() {
 
@@ -276,6 +287,9 @@ public class TraceMarkerTest {
         assertTrue(traceMarker.getLabel() == null);
     }
 
+    /**
+     * Test: marker category is correct
+     */
     @Test
     public void testMarkerCategory(){
 
@@ -288,6 +302,10 @@ public class TraceMarkerTest {
         assertTrue(traceMarker.getCategory() == null);
     }
 
+
+    /**
+     * Test: verify marker configuration via added categories and added MarkerEvent objects
+     */
     @Test
     public void testConfigureTraceMarker() {
         fScriptingMarkerSource.initializeAdapterMarkersLists();

@@ -204,19 +204,19 @@ public class TraceMarkerTest {
 
         // Test: Marker has default color when color parameter is an empty
         // string
-        TraceMarker traceMarker = new TraceMarker("marker2", "", fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "");
+        TraceMarker traceMarker = new TraceMarker("", "", fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "");
         rgbaColor = new RGBAColor(Integer.parseInt(X11ColorUtils.toHexColor(DEFAULT_COLOR).substring(1)));
         rgbaColorToCompare = new RGBA(rgbaColor.getRed(), rgbaColor.getGreen(), rgbaColor.getBlue(), ALPHA);
         assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
 
         // Test: Marker has default color when invalid color is passed as a
         // parameter
-        traceMarker = new TraceMarker("marker3", "", fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "invalid");
+        traceMarker = new TraceMarker("", "", fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "invalid");
         assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
 
         // Test: Marker has default color when null color is passed as a
         // parameter
-        traceMarker = new TraceMarker("marker4", "", fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), null);
+        traceMarker = new TraceMarker("", "", fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), null);
         assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
     }
 

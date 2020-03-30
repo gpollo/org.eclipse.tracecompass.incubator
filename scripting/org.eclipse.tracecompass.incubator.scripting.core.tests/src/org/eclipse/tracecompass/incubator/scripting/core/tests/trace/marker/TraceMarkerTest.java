@@ -172,7 +172,9 @@ public class TraceMarkerTest {
      */
     @After
     public void cleanUpEnvironment() throws CoreException {
-        fTrace.dispose();
+        if (fTrace != null) {
+            fTrace.dispose();
+        }
         IProject project = fProject;
         if (project != null) {
             project.delete(true, PROGRESS_MONITOR);

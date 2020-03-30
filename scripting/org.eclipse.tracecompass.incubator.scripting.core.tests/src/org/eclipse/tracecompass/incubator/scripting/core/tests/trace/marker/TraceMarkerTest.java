@@ -70,6 +70,7 @@ public class TraceMarkerTest {
     private static final TemporaryFolder TEMPORARY_FOLDER = new TemporaryFolder();
     /** The constant ALPHA for the marker transparency. */
     private static final int ALPHA = 70;
+    private static final int DEFAULT_ENDTIME = 100;
     private static final String DEFAULT_COLOR = "Red";
     private static final String[] TEST_COLORS = { "Dark Orange", "Black", "Burlywood", "Cyan", "Chartreuse", "Azure", "Yellow Green", "Silver" };
     private static final String[] TEST_LABELS = { "Default Marker", "Test", "Ericsson Marker", "" };
@@ -115,13 +116,15 @@ public class TraceMarkerTest {
             folder.create(true, true, PROGRESS_MONITOR);
         }
 
+        // Initialize TraceMarkerScriptingModule. Should not be able to add markers without a trace
+        fTraceMarkerScriptingModule = new TraceMarkerScriptingModule();
+        assertFalse(fTraceMarkerScriptingModule.addTraceMarker(0, DEFAULT_ENDTIME, "", "", DEFAULT_COLOR));
+
         // Initialize test trace
         fTrace = ScriptingTestUtils.getTrace();
         assertNotNull(fTrace);
         assertTrue(fTrace instanceof TmfXmlTraceStub);
 
-        // Test: Try to add marker before trace exists in project
-        assertFalse(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "", "", DEFAULT_COLOR));
 
         // Add the trace
         IPath filePath = ActivatorTest.getAbsoluteFilePath(TRACE_PATH);
@@ -162,6 +165,7 @@ public class TraceMarkerTest {
         fScriptingMarkerSourceFactory = ScriptingMarkerSourceFactory.getInstance();
         assertNotNull(fScriptingMarkerSourceFactory);
         assertNotNull(fScriptingMarkerSourceFactory.getAdapterList()[0]);
+
     }
 
     /**
@@ -199,7 +203,7 @@ public class TraceMarkerTest {
         for (int i = 0; i < TEST_COLORS.length; i++) {
             TraceMarker traceMarker = new TraceMarker("Marker" + String.valueOf(i), null, fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(),
                     TEST_COLORS[i]);
-            rgbaColor = new RGBAColor(Integer.parseInt(X11ColorUtils.toHexColor(TEST_COLORS[i]).substring(1)));
+            rgbaColor = new RGBAColor(Integer.parseInt(X11ColorUtils.toHexColor(TEST_COLORS[i]).substring(1), 16));
             rgbaColorToCompare = new RGBA(rgbaColor.getRed(), rgbaColor.getGreen(), rgbaColor.getBlue(), ALPHA);
             assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
         }
@@ -207,7 +211,7 @@ public class TraceMarkerTest {
         // Test: Marker has default color when color parameter is an empty
         // string
         TraceMarker traceMarker = new TraceMarker("", "", fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "");
-        rgbaColor = new RGBAColor(Integer.parseInt(X11ColorUtils.toHexColor(DEFAULT_COLOR).substring(1)));
+        rgbaColor = new RGBAColor(Integer.parseInt(X11ColorUtils.toHexColor(DEFAULT_COLOR).substring(1), 16));
         rgbaColorToCompare = new RGBA(rgbaColor.getRed(), rgbaColor.getGreen(), rgbaColor.getBlue(), ALPHA);
         assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
 

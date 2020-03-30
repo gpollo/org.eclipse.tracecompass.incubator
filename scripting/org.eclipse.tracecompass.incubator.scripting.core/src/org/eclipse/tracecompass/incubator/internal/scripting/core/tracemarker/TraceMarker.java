@@ -119,8 +119,8 @@ public class TraceMarker {
         int intColor = Integer.parseInt(hexColor, HEX);
         RGBAColor rgbaColor = new RGBAColor(intColor);
         fRGBAColor = new RGBA(rgbaColor.getRed(),
-                rgbaColor.getBlue(),
                 rgbaColor.getGreen(),
+                rgbaColor.getBlue(),
                 ALPHA);
     }
 

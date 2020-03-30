@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -150,7 +151,7 @@ public class TraceMarkerTest {
         assertNotNull(resource);
         assertTrue(ResourceUtil.createSymbolicLink(resource, new Path(NONESISTENT_TRACE_IN_EXISTENT_PATH), true, PROGRESS_MONITOR));
 
-        // Initialize trace
+     // Initialize trace
         fTrace = ScriptingTestUtils.getTrace();
         assertNotNull(fTrace);
         assertTrue(fTrace instanceof TmfXmlTraceStub);
@@ -232,10 +233,10 @@ public class TraceMarkerTest {
     }
 
     /**
-     * Test: assign different timestamps to a marker
+     * Test: assign incorrect timestamps to a marker
      */
     @Test
-    public void testMarkerTimeStamp() {
+    public void testIncorrectMarkerTimeStamp() {
         long startTime = -10;
         long endTime = -2;
 
@@ -263,18 +264,28 @@ public class TraceMarkerTest {
         // Test: startTime and endTime outside of trace time range
         assertFalse(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos() - 1, fTrace.getEndTime().toNanos() + 1, "", "", ""));
 
+    }
+
+    @Test
+    /**
+     * Test: assign correct timestamps to a marker
+     */
+    public void testCorrectMarkerTimeStamp(){
+
+        long startTime = fTrace.getStartTime().toNanos();
+        long endTime = fTrace.getEndTime().toNanos();
+
         // Test: startTime equal to starTime of trace
-        assertTrue(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos() - 1, "", "", ""));
+        assertTrue(fTraceMarkerScriptingModule.addTraceMarker(startTime, endTime - 1, "", "", ""));
 
         // Test: endTime equal to endTime of trace
-        assertTrue(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos() + 1, fTrace.getEndTime().toNanos(), "", "", ""));
+        assertTrue(fTraceMarkerScriptingModule.addTraceMarker(startTime + 1, endTime, "", "", ""));
 
         // Test: duration equal to duration of trace
-        assertTrue(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(), "", "", ""));
+        assertTrue(fTraceMarkerScriptingModule.addTraceMarker(startTime, endTime, "", "", ""));
 
         // Test: startTime and endTime inside trace time range
-        assertTrue(fTraceMarkerScriptingModule.addTraceMarker(fTrace.getStartTime().toNanos() + 1, fTrace.getEndTime().toNanos() - 1, "", "", ""));
-
+        assertTrue(fTraceMarkerScriptingModule.addTraceMarker(startTime + 1, endTime - 1, "", "", ""));
     }
 
     /**

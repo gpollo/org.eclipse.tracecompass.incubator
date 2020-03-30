@@ -126,7 +126,7 @@ public class TraceMarkerScriptingModule {
             calculatedEndTime = startTime + DEFAULT_DURATION;
         }
 
-        if (startTime > calculatedEndTime || calculatedEndTime > fTrace..getEndTime().toNanos()) {
+        if (startTime > calculatedEndTime || calculatedEndTime > fTrace.getEndTime().toNanos()) {
             System.out.println(INVALID_END_TIMESTAMP);
             return false;
         }

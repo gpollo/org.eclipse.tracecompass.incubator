@@ -11,6 +11,7 @@
 package org.eclipse.tracecompass.incubator.internal.scripting.core.tracemarker;
 
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.tracecompass.tmf.core.signal.TmfSignalManager;
 import org.eclipse.tracecompass.tmf.core.trace.AbstractTmfTraceAdapterFactory;
 import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
 import org.eclipse.tracecompass.tmf.core.trace.TmfTrace;
@@ -51,6 +52,7 @@ public class ScriptingMarkerSourceFactory extends AbstractTmfTraceAdapterFactory
      * Unregister this factory to the trace adapter manager.
      */
     public void unregister() {
+        TmfSignalManager.deregister(this);
         TmfTraceAdapterManager.unregisterFactory(this);
     }
 

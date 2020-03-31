@@ -151,7 +151,7 @@ public class TraceMarkerTest {
         assertNotNull(resource);
         assertTrue(ResourceUtil.createSymbolicLink(resource, new Path(NONESISTENT_TRACE_IN_EXISTENT_PATH), true, PROGRESS_MONITOR));
 
-     // Initialize trace
+        // Initialize trace
         fTrace = ScriptingTestUtils.getTrace();
         assertNotNull(fTrace);
         assertTrue(fTrace instanceof TmfXmlTraceStub);
@@ -175,6 +175,7 @@ public class TraceMarkerTest {
 
     /**
      * Delete the project after tests
+     * Dispose of test trace
      *
      * @throws CoreException
      *             Exception thrown by project deletion
@@ -208,7 +209,7 @@ public class TraceMarkerTest {
         // Test: Marker has correct color
         for (int i = 0; i < TEST_COLORS.length; i++) {
             TraceMarker traceMarker = new TraceMarker("Marker" + String.valueOf(i), null, fTrace.getStartTime().toNanos(), fTrace.getEndTime().toNanos(),
-                    TEST_COLORS[i]);
+                                                      TEST_COLORS[i]);
             rgbaColor = new RGBAColor(Integer.parseInt(X11ColorUtils.toHexColor(TEST_COLORS[i]).substring(1), 16));
             rgbaColorToCompare = new RGBA(rgbaColor.getRed(), rgbaColor.getGreen(), rgbaColor.getBlue(), ALPHA);
             assertTrue(traceMarker.getRGBAColor().equals(rgbaColorToCompare));
@@ -236,7 +237,7 @@ public class TraceMarkerTest {
      * Test: assign incorrect timestamps to a marker
      */
     @Test
-    public void testIncorrectMarkerTimeStamp() {
+    public void testIncorrectMarkerTimestamp() {
         long startTime = -10;
         long endTime = -2;
 
@@ -266,11 +267,12 @@ public class TraceMarkerTest {
 
     }
 
-    @Test
+
     /**
      * Test: assign correct timestamps to a marker
      */
-    public void testCorrectMarkerTimeStamp(){
+    @Test
+    public void testCorrectMarkerTimestamp(){
 
         long startTime = fTrace.getStartTime().toNanos();
         long endTime = fTrace.getEndTime().toNanos();

@@ -24,6 +24,13 @@
             name="CallstackUI"
             visible="true">
       </module>
+      <module
+            category="org.eclipse.tracecompass.incubator.scripting.core.category"
+            class="org.eclipse.tracecompass.incubator.scripting.ui.tracemarker.TraceMarkerScriptingModule"
+            id="org.eclipse.tracecompass.incubator.scripting.ui.tracemarker"
+            name="TraceMarker"
+            visible="true">
+      </module>
    </extension>
    <extension
             point="org.eclipse.ui.views">
@@ -33,6 +40,17 @@
             class="org.eclipse.tracecompass.incubator.internal.scripting.ui.views.histogram.ScriptedHistogramView"
             id="org.eclipse.tracecompass.incubator.internal.scripting.ui.views.histogram"
             name="%view.scriptedHistogramChart"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+            point="org.eclipse.ui.views">
+      <view
+            allowMultiple="true"
+            category="org.eclipse.linuxtools.lttng2.ui.views.category"
+            class="org.eclipse.tracecompass.incubator.internal.scripting.ui.views.scatter.ScriptedScatterView"
+            id="org.eclipse.tracecompass.incubator.internal.scripting.ui.views.scatter"
+            name="%view.scriptedScatterChart"
             restorable="true">
       </view>
    </extension>
